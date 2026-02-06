@@ -4,6 +4,7 @@ from pathlib import Path
 from datetime import datetime
 
 TITLE   = "the city and the tower"
+AUTHOR  = "cl0cks4fe"
 EMAIL   = "cl0cks4fe@gmail.com"
 FOOTER  = '<a href="mailto:{email}">{email}</a>'.format(email=EMAIL)
 OUT     = Path("_site")
@@ -36,7 +37,7 @@ def md(t):
 def render(title, body, root=""):
     tab = TITLE if title == TITLE else f"{title} — {TITLE}"
     return PAGE.format(title=tab, site=TITLE, body=body, r=root,
-                        footer=FOOTER, y=datetime.now().year)
+                        footer=FOOTER)
 
 def build():
     shutil.rmtree(OUT, True); OUT.mkdir(); (OUT/"posts").mkdir()
