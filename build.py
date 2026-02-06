@@ -25,9 +25,8 @@ def parse(path):
 
 def md(t):
     t = re.sub(r'^```(\w*)\n(.*?)^```', lambda m: f'<pre><code>{m.group(2).replace("<","&lt;")}</code></pre>', t, flags=re.M|re.S)
-    t = re.sub(r'^(?:> .+\n?)+', lambda m: f'<blockquote><p>{re.sub(r"^> ","",m.group(),flags=re.M).strip()}</p></blockquote>', t, flags=re.M)
+    t = re.sub(r'^(?:> .+\n?)+', lambda m: f'<blockquote>{re.sub(r"^> ","",m.group(),flags=re.M).strip()}</blockquote>', t, flags=re.M)
     for n in (4,3,2,1): t = re.sub(rf'^{"#"*n} (.+)$', rf'<h{n}>\1</h{n}>', t, flags=re.M)
-    t = re.sub(r'^---+$', '<hr>', t, flags=re.M)
     for p, r in [(r'\*\*(.+?)\*\*', r'<strong>\1</strong>'), (r'\*(.+?)\*', r'<em>\1</em>'),
                  (r'`(.+?)`', r'<code>\1</code>'), (r'!\[([^\]]*)\]\((.+?)\)', r'<img src="\2" alt="\1">'),
                  (r'\[(.+?)\]\((.+?)\)', r'<a href="\2">\1</a>')]: t = re.sub(p, r, t)
