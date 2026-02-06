@@ -4,7 +4,6 @@ from pathlib import Path
 from datetime import datetime
 
 TITLE   = "the city and the tower"
-AUTHOR  = "cl0cks4fe"
 EMAIL   = "cl0cks4fe@gmail.com"
 FOOTER  = '<a href="mailto:{email}">{email}</a>'.format(email=EMAIL)
 OUT     = Path("_site")
@@ -35,10 +34,9 @@ def md(t):
     return "\n".join(f'<p>{b}</p>' if not b.startswith('<') else b for b in t.split("\n\n") if b.strip())
 
 def render(title, body, root=""):
-    fdate = lambda d: datetime.strptime(d,"%Y-%m-%d").strftime(DATEFMT)
     tab = TITLE if title == TITLE else f"{title} — {TITLE}"
     return PAGE.format(title=tab, site=TITLE, body=body, r=root,
-                        footer=FOOTER, y=datetime.now().year, author=AUTHOR)
+                        footer=FOOTER, y=datetime.now().year)
 
 def build():
     shutil.rmtree(OUT, True); OUT.mkdir(); (OUT/"posts").mkdir()
@@ -49,14 +47,13 @@ def build():
     posts = sorted([parse(f) for f in Path("posts").glob("*.md")], key=lambda x: x[0]["date"], reverse=True)
     fdate = lambda d: datetime.strptime(d, "%Y-%m-%d").strftime(DATEFMT)
     for m, body in posts:
-        print('!',m)
         html = f'<article><h1>{m["title"]}</h1><time>{fdate(m["date"])}</time>{md(body)}</article>'
         (OUT/f'posts/{m["slug"]}.html').write_text(render(m["title"], html, "../"))
         print(f"  posts/{m['slug']}.html")
 
     links = "\n".join(f'<li><a href="posts/{m["slug"]}.html">{m["title"]}</a><time>{fdate(m["date"])}</time></li>' for m,_ in posts)
     (OUT/"index.html").write_text(render(TITLE, f"<ul class='posts'>{links}</ul>" if posts else "<p>Nothing here</p>"))
-    print(f"  index.html\n\n✓ {len(posts)} posts → {OUT}/")
+    print(f"  {len(posts)} posts → {OUT}/")
 
 if __name__ == "__main__":
     build()
